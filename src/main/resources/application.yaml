@@ -1,0 +1,20 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ms-campuslab-bff
+  cloud:
+    azure:
+      active-directory:
+        enabled: true
+        profile:
+          tenant-id: aff2eb38-d6cf-4220-8527-53f1cb6aed15
+        credential:
+          client-id: 8d19bb45-1842-43ce-b76c-4513b979df81
+        app-id-uri: api://8d19bb45-1842-43ce-b76c-4513b979df81
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://login.microsoftonline.com/aff2eb38-d6cf-4220-8527-53f1cb6aed15/v2.0
