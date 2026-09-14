@@ -1,8 +1,3 @@
----
-
-###`README.md` para `ms-campuslab-bff` (Backend For Frontend)
-
-```markdown
 # MS CampusLab BFF (Backend For Frontend)
 
 Microservicio de orquestación y mediación entre el cliente frontend y los microservicios de dominio (como el catálogo). Su propósito es centralizar, transformar y simplificar el flujo de peticiones hacia la interfaz de usuario.
