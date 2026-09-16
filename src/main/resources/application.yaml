@@ -1,4 +1,3 @@
-
 server:
   port: 8080
 
@@ -14,8 +13,9 @@ spring:
           # URI de id. de aplicación del BFF
           audiences: api://8d19bb45-1842-43ce-b76c-4513b979df81
 
-  services:
-    bookings-url: http://localhost:8081
-    audit-url: http://localhost:8085
-    report-url: http://localhost:8084
-    catalog-url: http://localhost:8082
+# ¡Colócalo aquí afuera, alineado con 'server' y 'spring'!
+services:
+  bookings-url: http://localhost:8081
+  audit-url: http://localhost:8085
+  report-url: http://localhost:8084
+  catalog-url: http://localhost:8082
