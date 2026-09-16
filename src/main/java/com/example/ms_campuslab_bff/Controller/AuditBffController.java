@@ -26,7 +26,7 @@ public class AuditBffController {
             @RequestParam(required = false) String actorId,
             HttpServletRequest request) {
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(auditUrl + "/api/audit/events");
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(auditUrl + "/api/audit/events");
         if (bookingId != null) builder.queryParam("bookingId", bookingId);
         if (actorId != null) builder.queryParam("actorId", actorId);
 

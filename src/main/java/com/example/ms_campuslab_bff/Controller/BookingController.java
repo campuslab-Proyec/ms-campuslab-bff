@@ -27,8 +27,7 @@ public class BookingController {
             @RequestParam(required = false) String to,
             HttpServletRequest request) {
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(bookingsUrl + "/api/bookings");
-        if (status != null) builder.queryParam("status", status);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(bookingsUrl + "/api/bookings");        if (status != null) builder.queryParam("status", status);
         if (from != null) builder.queryParam("from", from);
         if (to != null) builder.queryParam("to", to);
 
