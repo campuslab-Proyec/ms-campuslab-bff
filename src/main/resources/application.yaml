@@ -8,11 +8,12 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          # Id. de directorio (inquilino)
           issuer-uri: https://login.microsoftonline.com/aff2eb38-d6cf-4220-8527-53f1cb6aed15/v2.0
-          # URI de id. de aplicación del BFF
-          audiences: api://8d19bb45-1842-43ce-b76c-4513b979df81
+          jwk-set-uri: https://login.microsoftonline.com/aff2eb38-d6cf-4220-8527-53f1cb6aed15/discovery/v2.0/keys
 
 services:
-  catalog-url: http://catalog-service:8082
-  bookings-url: http://bookings-service:8081
+  bookings-url: http://ms-campuslab-bookings:8081
+  catalog-url: http://ms-campuslab-catalog:8082
+  notify-url: http://ms-campuslab-notify:8083
+  report-url: http://ms-campuslab-report:8084
+  audit-url: http://ms-campuslab-audit:8085
