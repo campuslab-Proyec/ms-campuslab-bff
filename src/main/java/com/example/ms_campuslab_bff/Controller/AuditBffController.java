@@ -1,12 +1,14 @@
 package com.example.ms_campuslab_bff.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/bff/audit")
@@ -18,9 +20,26 @@ public class AuditBffController {
     @Value("${services.audit-url:http://ms-campuslab-audit:8085}")
     private String auditUrl;
 
-    @GetMapping
-    public ResponseEntity<Object> getAuditLogs() {
-        String url = auditUrl + "/api/audit";
-        return restTemplate.getForEntity(url, Object.class);
+    @GetMapping("/events")
+    public ResponseEntity<Object> getEvents(
+            @RequestParam(required = false) String bookingId,
+            @RequestParam(required = false) String actorId,
+            HttpServletRequest request) {
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(auditUrl + "/api/audit/events");
+        if (bookingId != null) builder.queryParam("bookingId", bookingId);
+        if (actorId != null) builder.queryParam("actorId", actorId);
+
+        HttpEntity<Void> entity = new HttpEntity<>(forwardAuthHeader(request));
+        return restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, Object.class);
+    }
+
+    private HttpHeaders forwardAuthHeader(HttpServletRequest request) {
+        HttpHeaders headers = new HttpHeaders();
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null) {
+            headers.set("Authorization", authHeader);
+        }
+        return headers;
     }
 }

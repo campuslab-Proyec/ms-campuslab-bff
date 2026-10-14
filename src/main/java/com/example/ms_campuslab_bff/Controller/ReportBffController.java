@@ -1,17 +1,16 @@
 package com.example.ms_campuslab_bff.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
-@RequestMapping("/api/bff/reports")
+@RequestMapping("/api/bff/report")
 @CrossOrigin(origins = "*")
 public class ReportBffController {
 
@@ -20,15 +19,30 @@ public class ReportBffController {
     @Value("${services.report-url:http://ms-campuslab-report:8084}")
     private String reportUrl;
 
-    @GetMapping
-    public ResponseEntity<Object> getReports() {
-        String url = reportUrl + "/api/reports";
-        return restTemplate.getForEntity(url, Object.class);
+    @GetMapping("/kpis")
+    public ResponseEntity<Object> getKpis(
+            @RequestParam(defaultValue = "last24h") String range,
+            HttpServletRequest request) {
+        String url = reportUrl + "/api/report/kpis?range=" + range;
+        HttpEntity<Void> entity = new HttpEntity<>(forwardAuthHeader(request));
+        return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
     }
 
-    @PostMapping
-    public ResponseEntity<Object> generateReport(@RequestBody Object body) {
-        String url = reportUrl + "/api/reports";
-        return restTemplate.postForEntity(url, body, Object.class);
+    @GetMapping("/top-resources")
+    public ResponseEntity<Object> getTopResources(
+            @RequestParam(defaultValue = "last7d") String range,
+            HttpServletRequest request) {
+        String url = reportUrl + "/api/report/top-resources?range=" + range;
+        HttpEntity<Void> entity = new HttpEntity<>(forwardAuthHeader(request));
+        return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+    }
+
+    private HttpHeaders forwardAuthHeader(HttpServletRequest request) {
+        HttpHeaders headers = new HttpHeaders();
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null) {
+            headers.set("Authorization", authHeader);
+        }
+        return headers;
     }
 }
