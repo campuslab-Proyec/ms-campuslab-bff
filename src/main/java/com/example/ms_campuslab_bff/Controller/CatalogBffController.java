@@ -1,5 +1,6 @@
 package com.example.ms_campuslab_bff.controller;
 
+import com.example.ms_campuslab_bff.util.ResponseRelay;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,13 +25,26 @@ public class CatalogBffController {
     @GetMapping("/resources")
     public ResponseEntity<Object> getResources() {
         String url = catalogUrl + "/api/catalog/resources";
-        return restTemplate.getForEntity(url, Object.class);
+        return ResponseRelay.clean(restTemplate.getForEntity(url, Object.class));
     }
 
     @PostMapping("/resources")
-    @PreAuthorize("hasAuthority('APPROLE_Admin')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Object> createResource(@RequestBody Object body) {
         String url = catalogUrl + "/api/catalog/resources";
-        return restTemplate.postForEntity(url, body, Object.class);
+        return ResponseRelay.clean(restTemplate.postForEntity(url, body, Object.class));
+    }
+
+    @GetMapping("/labs")
+    public ResponseEntity<Object> getLabs() {
+        String url = catalogUrl + "/api/catalog/labs";
+        return ResponseRelay.clean(restTemplate.getForEntity(url, Object.class));
+    }
+
+    @PostMapping("/labs")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Object> createLab(@RequestBody Object body) {
+        String url = catalogUrl + "/api/catalog/labs";
+        return ResponseRelay.clean(restTemplate.postForEntity(url, body, Object.class));
     }
 }

@@ -1,5 +1,6 @@
 package com.example.ms_campuslab_bff.controller;
 
+import com.example.ms_campuslab_bff.util.ResponseRelay;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,6 +23,6 @@ public class NotifyBffController {
     @PostMapping
     public ResponseEntity<Object> sendNotification(@RequestBody Object body) {
         String url = notifyUrl + "/api/notifications";
-        return restTemplate.postForEntity(url, body, Object.class);
+        return ResponseRelay.clean(restTemplate.postForEntity(url, body, Object.class));
     }
 }

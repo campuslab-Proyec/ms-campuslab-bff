@@ -1,5 +1,6 @@
 package com.example.ms_campuslab_bff.controller;
 
+import com.example.ms_campuslab_bff.util.ResponseRelay;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -31,7 +32,7 @@ public class AuditBffController {
         if (actorId != null) builder.queryParam("actorId", actorId);
 
         HttpEntity<Void> entity = new HttpEntity<>(forwardAuthHeader(request));
-        return restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, Object.class);
+        return ResponseRelay.clean(restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, Object.class));
     }
 
     private HttpHeaders forwardAuthHeader(HttpServletRequest request) {

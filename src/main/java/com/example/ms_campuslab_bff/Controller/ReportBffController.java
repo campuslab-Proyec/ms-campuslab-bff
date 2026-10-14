@@ -1,5 +1,6 @@
 package com.example.ms_campuslab_bff.controller;
 
+import com.example.ms_campuslab_bff.util.ResponseRelay;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -25,7 +26,7 @@ public class ReportBffController {
             HttpServletRequest request) {
         String url = reportUrl + "/api/report/kpis?range=" + range;
         HttpEntity<Void> entity = new HttpEntity<>(forwardAuthHeader(request));
-        return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+        return ResponseRelay.clean(restTemplate.exchange(url, HttpMethod.GET, entity, Object.class));
     }
 
     @GetMapping("/top-resources")
@@ -34,7 +35,7 @@ public class ReportBffController {
             HttpServletRequest request) {
         String url = reportUrl + "/api/report/top-resources?range=" + range;
         HttpEntity<Void> entity = new HttpEntity<>(forwardAuthHeader(request));
-        return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+        return ResponseRelay.clean(restTemplate.exchange(url, HttpMethod.GET, entity, Object.class));
     }
 
     private HttpHeaders forwardAuthHeader(HttpServletRequest request) {

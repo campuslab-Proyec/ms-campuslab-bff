@@ -1,5 +1,6 @@
 package com.example.ms_campuslab_bff.controller;
 
+import com.example.ms_campuslab_bff.util.ResponseRelay;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -33,28 +34,28 @@ public class BookingController {
         if (to != null) builder.queryParam("to", to);
 
         HttpEntity<Void> entity = new HttpEntity<>(forwardAuthHeader(request));
-        return restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, Object.class);
+        return ResponseRelay.clean(restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, Object.class));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getById(@PathVariable Long id, HttpServletRequest request) {
         String url = bookingsUrl + "/api/bookings/" + id;
         HttpEntity<Void> entity = new HttpEntity<>(forwardAuthHeader(request));
-        return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+        return ResponseRelay.clean(restTemplate.exchange(url, HttpMethod.GET, entity, Object.class));
     }
 
     @PostMapping
     public ResponseEntity<Object> createBooking(@RequestBody Object body, HttpServletRequest request) {
         String url = bookingsUrl + "/api/bookings";
         HttpEntity<Object> entity = new HttpEntity<>(body, forwardAuthHeader(request));
-        return restTemplate.exchange(url, HttpMethod.POST, entity, Object.class);
+        return ResponseRelay.clean(restTemplate.exchange(url, HttpMethod.POST, entity, Object.class));
     }
 
     @PutMapping("/{id}/status")
     public ResponseEntity<Object> updateStatus(@PathVariable Long id, @RequestBody Object body, HttpServletRequest request) {
         String url = bookingsUrl + "/api/bookings/" + id + "/status";
         HttpEntity<Object> entity = new HttpEntity<>(body, forwardAuthHeader(request));
-        return restTemplate.exchange(url, HttpMethod.PUT, entity, Object.class);
+        return ResponseRelay.clean(restTemplate.exchange(url, HttpMethod.PUT, entity, Object.class));
     }
 
     /** Reenvía el header Authorization que llegó del frontend hacia el microservicio de dominio. */
