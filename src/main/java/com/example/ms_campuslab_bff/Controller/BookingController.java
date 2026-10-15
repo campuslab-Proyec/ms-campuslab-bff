@@ -7,6 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -51,6 +52,7 @@ public class BookingController {
     }
 
     @PutMapping("/{id}/status")
+    @PreAuthorize("hasAnyAuthority('APPROLE_Admin', 'APPROLE_Docente')")
     public ResponseEntity<Object> updateStatus(@PathVariable Long id, @RequestBody Object body, HttpServletRequest request) {
         String url = bookingsUrl + "/api/bookings/" + id + "/status";
         HttpEntity<Object> entity = new HttpEntity<>(body, forwardAuthHeader(request));

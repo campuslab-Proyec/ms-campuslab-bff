@@ -3,6 +3,7 @@ package com.example.ms_campuslab_bff.Controller;
 import com.example.ms_campuslab_bff.util.ResponseRelay;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
+@PreAuthorize("hasAuthority('APPROLE_Admin')")
 @RequestMapping("/api/bff/notify")
 public class NotifyBffController {
 

@@ -27,7 +27,7 @@ public class CatalogBffController {
     }
 
     @PostMapping("/resources")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('APPROLE_Admin')")
     public ResponseEntity<Object> createResource(@RequestBody Object body) {
         String url = catalogUrl + "/api/catalog/resources";
         return ResponseRelay.clean(restTemplate.postForEntity(url, body, Object.class));
@@ -40,7 +40,7 @@ public class CatalogBffController {
     }
 
     @PostMapping("/labs")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('APPROLE_Admin')")
     public ResponseEntity<Object> createLab(@RequestBody Object body) {
         String url = catalogUrl + "/api/catalog/labs";
         return ResponseRelay.clean(restTemplate.postForEntity(url, body, Object.class));
