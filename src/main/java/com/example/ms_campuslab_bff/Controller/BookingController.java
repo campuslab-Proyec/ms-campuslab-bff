@@ -1,4 +1,4 @@
-package com.example.ms_campuslab_bff.controller;
+package com.example.ms_campuslab_bff.Controller;
 
 import com.example.ms_campuslab_bff.util.ResponseRelay;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +13,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/bff/bookings")
-@CrossOrigin(origins = "*")
 public class BookingController {
 
     private final RestTemplate restTemplate = new RestTemplate();

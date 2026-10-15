@@ -1,10 +1,9 @@
-package com.example.ms_campuslab_bff.controller;
+package com.example.ms_campuslab_bff.Controller;
 
 import com.example.ms_campuslab_bff.util.ResponseRelay;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +13,6 @@ import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/api/bff/catalog")
-@CrossOrigin(origins = "*")
 public class CatalogBffController {
 
     private final RestTemplate restTemplate = new RestTemplate();

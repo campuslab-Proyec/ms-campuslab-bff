@@ -1,4 +1,4 @@
-package com.example.ms_campuslab_bff.controller;
+package com.example.ms_campuslab_bff.Controller;
 
 import com.example.ms_campuslab_bff.util.ResponseRelay;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,10 +9,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/bff/report")
-@CrossOrigin(origins = "*")
 public class ReportBffController {
 
     private final RestTemplate restTemplate = new RestTemplate();
@@ -24,18 +26,22 @@ public class ReportBffController {
     public ResponseEntity<Object> getKpis(
             @RequestParam(defaultValue = "last24h") String range,
             HttpServletRequest request) {
-        String url = reportUrl + "/api/report/kpis?range=" + range;
+        URI uri = UriComponentsBuilder.fromUriString(reportUrl + "/api/report/kpis")
+                .queryParam("range", range)
+                .encode().build().toUri();
         HttpEntity<Void> entity = new HttpEntity<>(forwardAuthHeader(request));
-        return ResponseRelay.clean(restTemplate.exchange(url, HttpMethod.GET, entity, Object.class));
+        return ResponseRelay.clean(restTemplate.exchange(uri, HttpMethod.GET, entity, Object.class));
     }
 
     @GetMapping("/top-resources")
     public ResponseEntity<Object> getTopResources(
             @RequestParam(defaultValue = "last7d") String range,
             HttpServletRequest request) {
-        String url = reportUrl + "/api/report/top-resources?range=" + range;
+        URI uri = UriComponentsBuilder.fromUriString(reportUrl + "/api/report/top-resources")
+                .queryParam("range", range)
+                .encode().build().toUri();
         HttpEntity<Void> entity = new HttpEntity<>(forwardAuthHeader(request));
-        return ResponseRelay.clean(restTemplate.exchange(url, HttpMethod.GET, entity, Object.class));
+        return ResponseRelay.clean(restTemplate.exchange(uri, HttpMethod.GET, entity, Object.class));
     }
 
     private HttpHeaders forwardAuthHeader(HttpServletRequest request) {

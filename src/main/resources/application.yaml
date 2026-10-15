@@ -10,6 +10,10 @@ spring:
         jwt:
           issuer-uri: https://login.microsoftonline.com/aff2eb38-d6cf-4220-8527-53f1cb6aed15/v2.0
           jwk-set-uri: https://login.microsoftonline.com/aff2eb38-d6cf-4220-8527-53f1cb6aed15/discovery/v2.0/keys
+          # Solo tokens emitidos para la API ms-campuslab-bff (v2 usa el client id; v1 usa el URI api://)
+          audiences:
+            - 8d19bb45-1842-43ce-b76c-4513b979df81
+            - api://8d19bb45-1842-43ce-b76c-4513b979df81
 
 services:
   bookings-url: http://ms-campuslab-bookings:8081
