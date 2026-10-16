@@ -1,7 +1,8 @@
-package com.example.ms_campuslab_bff.controller;
+package com.example.ms_campuslab_bff.Controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,10 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 
 /**
- * Pasa al frontend el estado de las colas/DLQ de ms-campuslab-notify. Requiere
- * JWT como el resto del BFF (anyRequest().authenticated()).
+ * Pasa al frontend el estado de las colas/DLQ de ms-campuslab-notify. Igual que
+ * notify/audit/report, solo para usuarios con el App Role Admin.
  */
 @RestController
+@PreAuthorize("hasAuthority('APPROLE_Admin')")
 @RequestMapping("/api/bff/alerts")
 public class AlertsProxyController {
 
