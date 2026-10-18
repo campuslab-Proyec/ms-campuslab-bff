@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.ms_campuslab_bff.config.RoleResolver;
+
 /**
  * Devuelve los datos y roles del usuario autenticado. Los App Roles (Admin, Docente, Estudiante)
  * están definidos en el registro de ms-campuslab-bff, por lo que solo vienen en el access token
@@ -18,13 +20,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/bff/me")
 public class MeController {
 
+    private final RoleResolver roleResolver;
+
+    public MeController(RoleResolver roleResolver) {
+        this.roleResolver = roleResolver;
+    }
+
     @GetMapping
     public Map<String, Object> me(@AuthenticationPrincipal Jwt jwt) {
-        List<String> roles = jwt.getClaimAsStringList("roles");
+        // Roles efectivos: los del token o, si no trae, el rol por dominio de correo (RoleResolver)
+        List<String> roles = roleResolver.rolesFor(jwt);
         return Map.of(
                 "name", String.valueOf(jwt.getClaimAsString("name")),
                 "username", String.valueOf(jwt.getClaimAsString("preferred_username")),
-                "roles", roles != null ? roles : List.of()
+                "roles", roles
         );
     }
 }

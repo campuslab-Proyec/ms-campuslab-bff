@@ -21,3 +21,8 @@ services:
   notify-url: http://ms-campuslab-notify:8083
   report-url: http://ms-campuslab-report:8084
   audit-url: http://ms-campuslab-audit:8085
+# Rol automático: usuarios SIN App Role en el token cuyo correo es de estos dominios se tratan como Docente
+# (lista separada por comas). Vacío = desactivado. En Docker se cambia con CAMPUSLAB_SECURITY_DOCENTE_DOMAINS.
+campuslab:
+  security:
+    docente-domains: duocuc.cl

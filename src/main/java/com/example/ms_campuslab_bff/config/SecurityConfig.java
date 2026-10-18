@@ -24,6 +24,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private final RoleResolver roleResolver;
+
+    public SecurityConfig(RoleResolver roleResolver) {
+        this.roleResolver = roleResolver;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -39,8 +45,9 @@ public class SecurityConfig {
     }
 
     /**
-     * Mapea authorities del token: los scopes por defecto (SCOPE_*) y además el claim "roles"
-     * de Entra ID como APPROLE_* para que funcionen los @PreAuthorize("hasAuthority('APPROLE_Admin')").
+     * Mapea authorities del token: los scopes por defecto (SCOPE_*) y además los roles efectivos
+     * (claim "roles" de Entra ID, o el rol por dominio de RoleResolver) como APPROLE_* para que
+     * funcionen los @PreAuthorize("hasAuthority('APPROLE_Admin')").
      */
     private JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter scopesConverter = new JwtGrantedAuthoritiesConverter();
@@ -48,11 +55,8 @@ public class SecurityConfig {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
             Collection<GrantedAuthority> authorities = new ArrayList<>(scopesConverter.convert(jwt));
-            List<String> roles = jwt.getClaimAsStringList("roles");
-            if (roles != null) {
-                for (String role : roles) {
-                    authorities.add(new SimpleGrantedAuthority("APPROLE_" + role));
-                }
+            for (String role : roleResolver.rolesFor(jwt)) {
+                authorities.add(new SimpleGrantedAuthority("APPROLE_" + role));
             }
             return authorities;
         });
