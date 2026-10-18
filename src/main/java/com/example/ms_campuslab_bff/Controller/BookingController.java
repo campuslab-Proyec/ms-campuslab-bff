@@ -21,6 +21,9 @@ public class BookingController {
     @Value("${services.bookings-url:http://ms-campuslab-bookings:8081}")
     private String bookingsUrl;
 
+    @Value("${services.audit-url:http://ms-campuslab-audit:8085}")
+    private String auditUrl;
+
     @GetMapping
     public ResponseEntity<Object> getBookings(
             @RequestParam(required = false) String status,
@@ -40,6 +43,19 @@ public class BookingController {
     @GetMapping("/{id}")
     public ResponseEntity<Object> getById(@PathVariable Long id, HttpServletRequest request) {
         String url = bookingsUrl + "/api/bookings/" + id;
+        HttpEntity<Void> entity = new HttpEntity<>(forwardAuthHeader(request));
+        return ResponseRelay.clean(restTemplate.exchange(url, HttpMethod.GET, entity, Object.class));
+    }
+
+    /**
+     * Historial de una reserva (eventos de auditoría) para la línea de tiempo del frontend.
+     * A diferencia de /api/bff/audit (solo Admin), cualquier usuario autenticado puede ver
+     * la historia de una reserva concreta.
+     */
+    @GetMapping("/{id}/history")
+    public ResponseEntity<Object> getHistory(@PathVariable Long id, HttpServletRequest request) {
+        String url = UriComponentsBuilder.fromUriString(auditUrl + "/api/audit/events")
+                .queryParam("bookingId", id).toUriString();
         HttpEntity<Void> entity = new HttpEntity<>(forwardAuthHeader(request));
         return ResponseRelay.clean(restTemplate.exchange(url, HttpMethod.GET, entity, Object.class));
     }
