@@ -1,5 +1,6 @@
 package com.example.ms_campuslab_bff.Controller;
 
+import com.example.ms_campuslab_bff.config.BearerTokenForwarder;
 import com.example.ms_campuslab_bff.util.ResponseRelay;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,14 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/api/bff/notify")
 public class NotifyBffController {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate = createRestTemplate();
+
+    /** notify valida el JWT: se le reenvía el token del usuario. */
+    private static RestTemplate createRestTemplate() {
+        RestTemplate rt = new RestTemplate();
+        rt.getInterceptors().add(new BearerTokenForwarder());
+        return rt;
+    }
 
     @Value("${services.notify-url:http://ms-campuslab-notify:8083}")
     private String notifyUrl;

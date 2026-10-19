@@ -2,6 +2,7 @@ package com.example.ms_campuslab_bff.Controller;
 
 import java.net.URI;
 
+import com.example.ms_campuslab_bff.config.BearerTokenForwarder;
 import com.example.ms_campuslab_bff.util.ResponseRelay;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +31,14 @@ public class RabbitAdminProxyController {
     private static final String BFF_PREFIX = "/api/bff";
 
     // Cliente HTTP del JDK: a diferencia del cliente por defecto, envía body también en DELETE (bindings)
-    private final RestTemplate restTemplate = new RestTemplate(new JdkClientHttpRequestFactory());
+    private final RestTemplate restTemplate = createRestTemplate();
+
+    /** notify valida el JWT: se le reenvía el token del usuario. */
+    private static RestTemplate createRestTemplate() {
+        RestTemplate rt = new RestTemplate(new JdkClientHttpRequestFactory());
+        rt.getInterceptors().add(new BearerTokenForwarder());
+        return rt;
+    }
 
     @Value("${services.notify-url:http://ms-campuslab-notify:8083}")
     private String notifyUrl;

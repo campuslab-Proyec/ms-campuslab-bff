@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 
+import com.example.ms_campuslab_bff.config.BearerTokenForwarder;
+
 /**
  * Pasa al frontend el estado de las colas/DLQ de ms-campuslab-notify. Igual que
  * notify/audit/report, solo para usuarios con el App Role Admin.
@@ -22,7 +24,8 @@ public class AlertsProxyController {
     private final RestClient rest;
 
     public AlertsProxyController(@Value("${services.notify-url}") String notifyUrl) {
-        this.rest = RestClient.builder().baseUrl(notifyUrl).build();
+        // notify valida el JWT: se le reenvía el token del usuario
+        this.rest = RestClient.builder().baseUrl(notifyUrl).requestInterceptor(new BearerTokenForwarder()).build();
     }
 
     @GetMapping(value = "/dlq", produces = MediaType.APPLICATION_JSON_VALUE)
